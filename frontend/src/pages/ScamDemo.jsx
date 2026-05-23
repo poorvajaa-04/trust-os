@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { api } from "../utils/api";
 
-const PRESETS = [
+// PRESETS is now a function that receives micSimulated as a parameter.
+// This means mic_active is never hardcoded — it always reflects the
+// current state of the checkbox toggle on screen.
+const getPresets = (micSimulated) => [
   {
     label: "Normal Payment", icon: "✅",
     signals: {
@@ -17,21 +20,23 @@ const PRESETS = [
       typing_speed_ms: 650, hesitation_before_confirm_ms: 16000,
       session_age_seconds: 15, amount_copy_pasted: true, new_payee: true,
       amount_round_number: true, transaction_amount: 50000,
-      user_tier: "rural", mic_active: true, hour_of_day: 14, checks_in_session: 1,
+      user_tier: "rural", mic_active: micSimulated, hour_of_day: 14, checks_in_session: 1,
     }
   },
 ];
 
 export default function ScamDemo() {
-  const [result,  setResult]  = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [active,  setActive]  = useState(null);
+  const [result,       setResult]       = useState(null);
+  const [loading,      setLoading]      = useState(false);
+  const [active,       setActive]       = useState(null);
+  const [micSimulated, setMicSimulated] = useState(false);
 
-  const runPreset = async (p, i) => {
+  const runPreset = async (preset, i) => {
     setLoading(true);
     setActive(i);
     setResult(null);
-    try { setResult(await api.detectScam(p.signals)); }
+    const freshPresets = getPresets(micSimulated);
+    try { setResult(await api.detectScam(freshPresets[i].signals)); }
     catch (_) { setResult({ error: true }); }
     setLoading(false);
   };
@@ -53,8 +58,71 @@ export default function ScamDemo() {
 
       <div className="card animate-fade-up stagger-1" style={{ marginBottom: 24 }}>
         <div className="section-label">SELECT SCENARIO</div>
+
+        {/* ── Mic toggle ───────────────────────────────────────────────── */}
+        <div
+          onClick={() => setMicSimulated(v => !v)}
+          style={{
+            display:      "flex",
+            alignItems:   "center",
+            gap:          12,
+            padding:      "12px 16px",
+            marginBottom: 16,
+            borderRadius: "var(--radius-sm)",
+            border:       micSimulated
+              ? "1px solid rgba(239,68,68,0.45)"
+              : "1px solid var(--border-dim)",
+            background:   micSimulated
+              ? "rgba(239,68,68,0.06)"
+              : "var(--bg-deep)",
+            cursor:       "pointer",
+            transition:   "all 0.2s",
+            userSelect:   "none",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={micSimulated}
+            onChange={e => setMicSimulated(e.target.checked)}
+            onClick={e => e.stopPropagation()}
+            style={{ width: 15, height: 15, cursor: "pointer", accentColor: "var(--risk-high)" }}
+          />
+          <div style={{ flex: 1 }}>
+            <div style={{
+              fontSize:   13,
+              fontWeight: 600,
+              color:      micSimulated ? "#fca5a5" : "var(--text-secondary)",
+              marginBottom: 2,
+            }}>
+              🎙️ Simulate concurrent phone call (microphone active)
+            </div>
+            <div style={{ fontSize: 11, color: "var(--text-dim)", lineHeight: 1.4 }}>
+              {micSimulated
+                ? "Signal: mic_active = true → ScamRadar weight +30 points"
+                : "Browser cannot detect OS-level mic usage — toggle to simulate production behaviour"}
+            </div>
+          </div>
+          {micSimulated && (
+            <span style={{
+              fontFamily:    "var(--font-mono)",
+              fontSize:      10,
+              fontWeight:    700,
+              color:         "var(--risk-high)",
+              letterSpacing: 1,
+              padding:       "3px 8px",
+              background:    "rgba(239,68,68,0.1)",
+              borderRadius:  99,
+              border:        "1px solid rgba(239,68,68,0.3)",
+              flexShrink:    0,
+            }}>
+              ACTIVE
+            </span>
+          )}
+        </div>
+
+        {/* ── Scenario buttons ─────────────────────────────────────────── */}
         <div style={{ display: "flex", gap: 12 }}>
-          {PRESETS.map((p, i) => (
+          {getPresets(micSimulated).map((p, i) => (
             <button
               key={i}
               className={`scenario-btn ${active === i ? "active-urban" : ""}`}
