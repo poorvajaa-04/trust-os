@@ -1,0 +1,107 @@
+{
+  "vpa_database": {
+
+    "9876543210@paytm": {
+      "trust_score": 88,
+      "account_age_days": 1240,
+      "risk_flags": [],
+      "verdict": "TRUSTED",
+      "reason": "Established account: 3+ years with consistent, clean transaction history"
+    },
+
+    "rahul.sharma.2023@upi": {
+      "trust_score": 74,
+      "account_age_days": 456,
+      "risk_flags": [],
+      "verdict": "TRUSTED",
+      "reason": "Regular savings account with clean transaction history across 15 months"
+    },
+
+    "meera.iyer@okicici": {
+      "trust_score": 91,
+      "account_age_days": 2180,
+      "risk_flags": [],
+      "verdict": "TRUSTED",
+      "reason": "Long-standing verified merchant account — 6 years of clean history"
+    },
+
+    "quickmoney99@ybl": {
+      "trust_score": 12,
+      "account_age_days": 3,
+      "risk_flags": ["new_account", "rapid_outflow", "multiple_devices", "high_inflow_velocity"],
+      "verdict": "MULE_SUSPECTED",
+      "reason": "3-day-old account receiving large inflows and immediately transferring out — classic mule pattern"
+    },
+
+    "refund.process@okaxis": {
+      "trust_score": 8,
+      "account_age_days": 1,
+      "risk_flags": ["new_account", "impersonation_name", "round_number_receives"],
+      "verdict": "HIGH_RISK",
+      "reason": "Official-sounding name on a 1-day-old account — impersonation attack pattern"
+    },
+
+    "sbi.customer.care@paytm": {
+      "trust_score": 3,
+      "account_age_days": 2,
+      "risk_flags": ["impersonation_name", "new_account", "multiple_devices", "known_fraud_pattern"],
+      "verdict": "BLOCKED",
+      "reason": "Impersonating SBI — known fraud VPA reported by 47 users. SBI customer care never uses UPI."
+    },
+
+    "winprize.claim@ibl": {
+      "trust_score": 2,
+      "account_age_days": 5,
+      "risk_flags": ["new_account", "prize_scam_pattern", "rapid_outflow", "known_fraud_pattern"],
+      "verdict": "BLOCKED",
+      "reason": "Lottery/prize scam VPA — matches CERT-In advisory pattern list (Advisory No. CERT-In/2023/073)"
+    },
+
+    "npci.help@ybl": {
+      "trust_score": 1,
+      "account_age_days": 1,
+      "risk_flags": ["impersonation_name", "new_account", "govt_impersonation"],
+      "verdict": "BLOCKED",
+      "reason": "Impersonating NPCI — NPCI is a regulatory body and has no UPI VPA. Always a scam."
+    },
+
+    "kyc.verify.now@paytm": {
+      "trust_score": 5,
+      "account_age_days": 4,
+      "risk_flags": ["kyc_scam_pattern", "new_account", "urgency_naming"],
+      "verdict": "HIGH_RISK",
+      "reason": "KYC scam VPA — banks and RBI never ask users to pay for KYC via UPI"
+    },
+
+    "cashback.return@okhdfc": {
+      "trust_score": 7,
+      "account_age_days": 2,
+      "risk_flags": ["cashback_scam", "new_account", "impersonation_name"],
+      "verdict": "HIGH_RISK",
+      "reason": "Cashback scam pattern impersonating HDFC. Cashback is auto-credited — never collected via UPI."
+    },
+
+    "aadhar.link.help@ibl": {
+      "trust_score": 4,
+      "account_age_days": 3,
+      "risk_flags": ["govt_impersonation", "new_account", "known_fraud_pattern"],
+      "verdict": "BLOCKED",
+      "reason": "UIDAI impersonation — Aadhaar linking is free and never requires any payment via UPI"
+    },
+
+    "pm.kisan.fund@ybl": {
+      "trust_score": 2,
+      "account_age_days": 6,
+      "risk_flags": ["govt_scheme_scam", "new_account", "rural_targeting"],
+      "verdict": "BLOCKED",
+      "reason": "PM-Kisan scam — government scheme money is directly deposited, never collected via UPI from farmers"
+    }
+
+  },
+
+  "default_unknown_vpa": {
+    "trust_score": 45,
+    "verdict": "UNVERIFIED",
+    "reason": "This VPA has no transaction history in the TRUST OS network. Proceed with caution for any amount above ₹500."
+  }
+}
